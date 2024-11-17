@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class BookingService {
@@ -24,7 +25,8 @@ public class BookingService {
         this.bookings = bookings;
     }
 
-    public void bookRoom(RoomType roomType, String phoneNumber, String customerName, LocalDateTime checkOut) {
+    public void bookRoom(RoomType roomType, LocalDateTime checkOut) {
+        Scanner scanner = new Scanner(System.in);
         LocalDateTime checkIn = LocalDateTime.now();
 
         if (checkOut.isBefore(checkIn)) {
@@ -48,8 +50,15 @@ public class BookingService {
         if (availableRoom.isPresent()) {
             Room room = availableRoom.get();
             String roomId = room.getId();
+
+            System.out.print("Nhập tên khách hàng: ");
+            String customerName = scanner.nextLine();
+            System.out.print("Nhập số điện thoại: ");
+            String phoneNumber = scanner.nextLine();
+
             String customerId = "C" + (customers.size() + 1);
-            customers.add(new Customer(customerId, customerName, phoneNumber));
+            Customer newCustomer = new Customer(customerId, customerName, phoneNumber);
+            customers.add(newCustomer);
 
             Booking booking = new Booking(
                     String.valueOf(bookings.size() + 1),
@@ -128,9 +137,10 @@ public class BookingService {
 
     public static void showAllBookings(List<Booking> bookings, List<Customer> customers) {
         LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter displayFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
         boolean hasBookings = false;
 
-        System.out.println("Thông tin khách hàng đang và  ở phòng:");
+        System.out.println("Thông tin khách hàng đang ở phòng:");
         for (Booking booking : bookings) {
             if (booking.getCheckInDateTime().isBefore(now) && booking.getCheckOutDateTime().isAfter(now)) {
                 Customer customer = customers.stream()
@@ -142,7 +152,8 @@ public class BookingService {
                     System.out.println("Phòng: " + booking.getRoomId() +
                             ", Khách hàng: " + customer.getName() +
                             ", Số điện thoại: " + customer.getPhone() +
-                            ", Thời gian lưu trú: " + booking.getCheckInDateTime() + " đến " + booking.getCheckOutDateTime());
+                            ", Thời gian lưu trú: " + booking.getCheckInDateTime().format(displayFormatter) +
+                            " đến " + booking.getCheckOutDateTime().format(displayFormatter));
                     hasBookings = true;
                 }
             }
@@ -165,7 +176,8 @@ public class BookingService {
                     System.out.println("Phòng: " + booking.getRoomId() +
                             ", Khách hàng: " + customer.getName() +
                             ", Số điện thoại: " + customer.getPhone() +
-                            ", Thời gian lưu trú: " + booking.getCheckInDateTime() + " đến " + booking.getCheckOutDateTime());
+                            ", Thời gian lưu trú: " + booking.getCheckInDateTime().format(displayFormatter) +
+                            " đến " + booking.getCheckOutDateTime().format(displayFormatter));
                     hasBookings = true;
                 }
             }

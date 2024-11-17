@@ -68,12 +68,7 @@ public class Main {
                         break;
                     }
 
-                    System.out.print("Nhập tên khách hàng: ");
-                    String customerName = scanner.nextLine();
-                    System.out.print("Nhập số điện thoại: ");
-                    String phone = scanner.nextLine();
-
-                    bookingService.bookRoom(roomType, phone, customerName, checkOut);
+                    bookingService.bookRoom(roomType, checkOut);
                     break;
 
                 case 2:

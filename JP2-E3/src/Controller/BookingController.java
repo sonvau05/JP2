@@ -11,13 +11,12 @@ public class BookingController {
         this.bookingService = bookingService;
     }
 
-    public void bookRoom(RoomType roomType, LocalDateTime checkOut, String phoneNumber, String customerName) {
+    public void bookRoom(RoomType roomType, LocalDateTime checkOut) {
         LocalDateTime checkIn = LocalDateTime.now();
         if (checkOut.isBefore(checkIn)) {
             System.out.println("Thời gian check-out không thể trước thời gian check-in.");
             return;
         }
-        bookingService.bookRoom(roomType, phoneNumber, customerName, checkOut);
+        bookingService.bookRoom(roomType, checkOut); // Không còn cần tham số phoneNumber và customerName
     }
 }
-
